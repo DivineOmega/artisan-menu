@@ -81,7 +81,7 @@ class ArtisanMenu extends Command
             if ($namespace->id == '_global') {
                 foreach($namespace->commands as $commandName) {
 
-                    if ($commandName == $this->signature) {
+                    if (in_array($commandName, [$this->signature, 'list', 'help', 'inspire'])) {
                         continue;
                     }
 
