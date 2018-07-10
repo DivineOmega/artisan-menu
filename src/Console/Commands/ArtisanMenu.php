@@ -5,6 +5,7 @@ namespace DivineOmega\ArtisanMenu\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
+use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
 
 class ArtisanMenu extends Command
@@ -44,7 +45,7 @@ class ArtisanMenu extends Command
      */
     public function handle()
     {
-        $returnCode = Artisan::call('list', ['format' => 'json']);
+        $returnCode = Artisan::call('list', ['--format' => 'json']);
 
         if ($returnCode != 0) {
             $this->error('Error calling `artisan list` command.');
@@ -58,7 +59,7 @@ class ArtisanMenu extends Command
             exit();
         }
 
-        $this->app= new Collection($response->application);
+        $this->app = $response->application;
         $this->commands = new Collection($response->commands);
         $this->namespaces = new Collection($response->namespaces);
 
@@ -71,19 +72,46 @@ class ArtisanMenu extends Command
 
         $menu = new CliMenuBuilder();
         $menu->setTitle('Artisan Menu - '.$this->app->name.' '.$this->app->version);
-        $menu->addLineBreak('-');
-        $menu->setBorder(1, 2, 'yellow');
-        $menu->setPadding(2, 4);
         $menu->setMarginAuto();
+        $menu->setBackgroundColour('black');
+        $menu->setForegroundColour('white');
 
         foreach($this->namespaces as $namespace) {
-            $menu->addItem($namespace->id, ['this', 'namespaceMenu']);
+
+            if ($namespace->id == '_global') {
+                foreach($namespace->commands as $commandName) {
+
+                    if ($commandName == $this->signature) {
+                        continue;
+                    }
+
+                    $command = $this->commands->where('name', $commandName)->first();
+                    $menu->addItem(ucfirst($command->description.' ('.$command->name.')'), function($menu) {
+                        $this->commandSelected($menu);
+                    });
+                }
+                $menu->addLineBreak();
+                continue;
+            }
+
+            $menu->addItem(ucfirst($namespace->id), function($menu) {
+                $this->namespaceSelected($menu);
+            });
         }
 
-        $menu->build();
+        $menu->addLineBreak();
+
+        $menu = $menu->build();
+
+        $menu->open();
     }
 
     private function namespaceSelected(CliMenu $menu)
+    {
+        $selectedNamespace = $menu->getSelectedItem()->getText();
+    }
+
+    private function commandSelected(CliMenu $menu)
     {
         $selectedNamespace = $menu->getSelectedItem()->getText();
     }
