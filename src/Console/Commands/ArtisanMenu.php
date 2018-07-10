@@ -5,7 +5,7 @@ namespace DivineOmega\ArtisanMenu\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
-class SendEmails extends Command
+class ArtisanMenu extends Command
 {
     /**
      * The name and signature of the console command.
