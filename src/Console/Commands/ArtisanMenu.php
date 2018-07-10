@@ -107,12 +107,6 @@ class ArtisanMenu extends Command
         $menu->open();
     }
 
-    private function namespaceSelected(CliMenu $menu)
-    {
-        $namespaceId = strtolower($menu->getSelectedItem()->getText());
-        $this->namespaceMenu($namespaceId);
-    }
-
     private function getNamespaceMenuBuilder(object $namespace)
     {
         $menu = CliMenuBuilder::newSubMenu(TerminalFactory::fromSystem());
