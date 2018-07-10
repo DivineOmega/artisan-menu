@@ -5,8 +5,10 @@ namespace DivineOmega\ArtisanMenu\Console\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
+use PhpSchool\CliMenu\Action\GoBackAction;
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
+use PhpSchool\CliMenu\Terminal\TerminalFactory;
 
 class ArtisanMenu extends Command
 {
@@ -95,9 +97,7 @@ class ArtisanMenu extends Command
                 continue;
             }
 
-            $menu->addItem(ucfirst($namespace->id), function($menu) {
-                $this->namespaceSelected($menu);
-            });
+            $menu->addSubMenuFromBuilder(ucfirst($namespace->id), $this->getNamespaceMenuBuilder($namespace));
         }
 
         $menu->addLineBreak();
@@ -113,15 +113,13 @@ class ArtisanMenu extends Command
         $this->namespaceMenu($namespaceId);
     }
 
-    private function namespaceMenu($namespaceId)
+    private function getNamespaceMenuBuilder(object $namespace)
     {
-        $menu = new CliMenuBuilder();
-        $menu->setTitle('Artisan Menu - '.ucfirst($namespaceId).' - '.$this->app->name.' '.$this->app->version);
+        $menu = CliMenuBuilder::newSubMenu(TerminalFactory::fromSystem());
+        $menu->setTitle('Artisan Menu - '.ucfirst($namespace->id).' - '.$this->app->name.' '.$this->app->version);
         $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
-
-        $namespace = $this->namespaces->where('id', $namespaceId)->first();
 
         foreach($namespace->commands as $commandName) {
 
@@ -135,9 +133,7 @@ class ArtisanMenu extends Command
 
         $menu->addLineBreak();
 
-        $menu = $menu->build();
-
-        $menu->open();
+        return $menu;
     }
 
     private function commandSelected(CliMenu $menu)
