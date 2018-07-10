@@ -8,5 +8,12 @@
         "psr-4": {
             "DivineOmega\\ArtisanMenu\\": "src/"
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "DivineOmega\\ArtisanMenu\\Providers\\ArtisanMenuServiceProvider"
+            ]
+        }
     }
 }
