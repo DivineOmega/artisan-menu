@@ -1,5 +1,5 @@
 {
-    "name": "Artisan Menu",
+    "name": "divineomega/artisan-menu",
     "description": "Use Artisan via a beautiful console GUI",
     "require": {
         "nunomaduro/laravel-console-menu": "^1.0"
