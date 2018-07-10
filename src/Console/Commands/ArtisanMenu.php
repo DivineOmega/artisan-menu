@@ -86,6 +86,7 @@ class ArtisanMenu extends Command
                     }
 
                     $command = $this->commands->where('name', $commandName)->first();
+
                     $menu->addItem(ucfirst($command->description.' ('.$command->name.')'), function($menu) {
                         $this->commandSelected($menu);
                     });
@@ -108,7 +109,35 @@ class ArtisanMenu extends Command
 
     private function namespaceSelected(CliMenu $menu)
     {
-        $selectedNamespace = $menu->getSelectedItem()->getText();
+        $namespaceId = strtolower($menu->getSelectedItem()->getText());
+        $this->namespaceMenu($namespaceId);
+    }
+
+    private function namespaceMenu($namespaceId)
+    {
+        $menu = new CliMenuBuilder();
+        $menu->setTitle('Artisan Menu - '.ucfirst($namespaceId).' - '.$this->app->name.' '.$this->app->version);
+        $menu->setMarginAuto();
+        $menu->setBackgroundColour('black');
+        $menu->setForegroundColour('white');
+
+        $namespace = $this->namespaces->where('id', $namespaceId)->first();
+
+        foreach($namespace->commands as $commandName) {
+
+            $command = $this->commands->where('name', $commandName)->first();
+
+            $menu->addItem(ucfirst($command->description.' ('.$command->name.')'), function($menu) {
+                $this->commandSelected($menu);
+            });
+        }
+
+
+        $menu->addLineBreak();
+
+        $menu = $menu->build();
+
+        $menu->open();
     }
 
     private function commandSelected(CliMenu $menu)
