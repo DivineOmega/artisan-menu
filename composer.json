@@ -1,0 +1,12 @@
+{
+    "name": "Artisan Menu",
+    "description": "Use Artisan via a beautiful console GUI",
+    "require": {
+        "nunomaduro/laravel-console-menu": "^1.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "DivineOmega\\ArtisanMenu\\": "src/"
+        }
+    }
+}
