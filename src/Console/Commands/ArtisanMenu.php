@@ -23,6 +23,10 @@ class ArtisanMenu extends Command
      */
     protected $description = 'Use Artisan via a beautiful console GUI';
 
+    private $app;
+    private $commands;
+    private $namespaces;
+
     /**
      * Create a new command instance.
      *
@@ -40,7 +44,7 @@ class ArtisanMenu extends Command
      */
     public function handle()
     {
-        $returnCode = Artisan::call('list', ['format' => 'json');
+        $returnCode = Artisan::call('list', ['format' => 'json']);
 
         if ($returnCode != 0) {
             $this->error('Error calling `artisan list` command.');
@@ -66,11 +70,11 @@ class ArtisanMenu extends Command
     {
 
         $menu = new CliMenuBuilder();
-        $menu->setTitle('Artisan Menu - '.this->app->name.' '.$this->app->version);
-        $menu->addLineBreak('-')
-        $menu->setBorder(1, 2, 'yellow')
-        $menu->setPadding(2, 4)
-        $menu->setMarginAuto()
+        $menu->setTitle('Artisan Menu - '.$this->app->name.' '.$this->app->version);
+        $menu->addLineBreak('-');
+        $menu->setBorder(1, 2, 'yellow');
+        $menu->setPadding(2, 4);
+        $menu->setMarginAuto();
 
         foreach($this->namespaces as $namespace) {
             $menu->addItem($namespace->id, ['this', 'namespaceMenu']);
