@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Artisan;
 use PhpSchool\CliMenu\Action\GoBackAction;
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
+use PhpSchool\CliMenu\MenuStyle;
 use PhpSchool\CliMenu\Terminal\TerminalFactory;
 
 class ArtisanMenu extends Command
@@ -129,12 +130,30 @@ class ArtisanMenu extends Command
     private function addCommandMenuItem(CliMenuBuilder $menu, object $command)
     {
         $menu->addItem(ucfirst($command->description.' ('.$command->name.')'), function($menu) use ($command) {
-            $this->commandSelected($command);
+            $this->commandSelected($menu, $command);
         });
     }
 
-    private function commandSelected(object $command)
+    private function commandSelected(CliMenu $menu, object $command)
     {
+        $menuStyle = new MenuStyle();
+        $menuStyle->setBg('white');
+        $menuStyle->setFg('black');
+
+        $arguments = [];
+
+        foreach($command->definition->arguments as $argument) {
+            if ($argument->is_required) {
+
+                $result = $menu->askText($menuStyle)
+                    ->setPromptText('Please enter '.lcfirst($argument->description))
+                    ->ask();
+
+                $arguments[$argument->name] = $result->fetch();
+            }
+        }
+
         var_dump($command->name);
+        var_dump($arguments);
     }
 }
