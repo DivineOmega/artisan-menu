@@ -146,7 +146,7 @@ class ArtisanMenu extends Command
             if ($argument->is_required) {
 
                 $result = $menu->askText($menuStyle)
-                    ->setPromptText('Please enter '.lcfirst($argument->description))
+                    ->setPromptText('Please enter '.lcfirst($argument->description ? $argument->description : $argument->name))
                     ->ask();
 
                 $arguments[$argument->name] = $result->fetch();
