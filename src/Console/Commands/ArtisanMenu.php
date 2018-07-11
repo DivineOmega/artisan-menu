@@ -153,7 +153,32 @@ class ArtisanMenu extends Command
             }
         }
 
-        var_dump($command->name);
-        var_dump($arguments);
+        try {
+            Artisan::call($command->name, $arguments);
+            $output = Artisan::output();
+            $success = true;
+        } catch (\Exception $e) {
+            $output = $e->getMessage();
+            $success = false;
+        }
+
+        $lines = explode(PHP_EOL, $output);
+
+        $outputMenu = (new CliMenuBuilder);
+        $outputMenu->setTitle($command->description.' ('.$command->name.')');
+        $outputMenu->setMarginAuto();
+        $outputMenu->setBackgroundColour($success ? 'black': 'red');
+        $outputMenu->setForegroundColour('white');
+        $outputMenu->setExitButtonText('OK');
+        foreach($lines as $line) {
+            $outputMenu->addStaticItem($line);
+        }
+        $outputMenu->addLineBreak();
+        $outputMenu = $outputMenu->build();
+        $outputMenu->open();
+
+        $menu->redraw();
+
+
     }
 }
