@@ -162,6 +162,10 @@ class ArtisanMenu extends Command
             $success = false;
         }
 
+        if (!$output) {
+            $output = 'This command produced no output.';
+        }
+
         $lines = explode(PHP_EOL, $output);
 
         $outputMenu = (new CliMenuBuilder);
