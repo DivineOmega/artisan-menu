@@ -84,22 +84,21 @@ class ArtisanMenu extends Command
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
 
-        foreach($this->namespaces as $namespace) {
+        $menu->addLineBreak();
 
-            if ($namespace->id == '_global') {
-                foreach($namespace->commands as $commandName) {
+        $recentCommands = $this->store->get('recent_commands');
 
-                    if (in_array($commandName, [$this->signature, 'list', 'help', 'inspire', 'optimize'])) {
-                        continue;
-                    }
-
-                    $this->addCommandMenuItem($menu, $this->getCommandByName($commandName));
-                }
-                $menu->addLineBreak();
-                continue;
+        if (is_array($recentCommands)) {
+            foreach($recentCommands as $commandName) {
+                $this->addCommandMenuItem($menu, $this->getCommandByName($commandName));
             }
+        }
 
-            $menu->addSubMenuFromBuilder(ucfirst($namespace->id), $this->getNamespaceMenuBuilder($namespace));
+        $menu->addLineBreak();
+
+        foreach($this->namespaces as $namespace) {
+            $title = $namespace->id == '_global' ? 'Global' : ucfirst($namespace->id);
+            $menu->addSubMenuFromBuilder($title, $this->getNamespaceMenuBuilder($namespace));
         }
 
         $menu->addLineBreak();
@@ -116,6 +115,12 @@ class ArtisanMenu extends Command
         $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
+
+        $namespaceRootCommand = $this->commands->firstWhere('name', $namespace->id);
+
+        if ($namespaceRootCommand) {
+            $this->addCommandMenuItem($menu,$namespaceRootCommand);
+        }
 
         foreach($namespace->commands as $commandName) {
             $this->addCommandMenuItem($menu, $this->getCommandByName($commandName));
@@ -134,6 +139,10 @@ class ArtisanMenu extends Command
 
     private function addCommandMenuItem(CliMenuBuilder $menu, object $command)
     {
+        if (in_array($command->name, ['list', 'help', 'inspire', 'optimize', 'menu'])) {
+            return;
+        }
+
         $menu->addItem(ucfirst($command->description.' ('.$command->name.')'), function($menu) use ($command) {
             $this->commandSelected($menu, $command);
         });
@@ -155,7 +164,9 @@ class ArtisanMenu extends Command
 
         array_unshift($recentCommands, $command->name);
 
-        var_dump($recentCommands);
+        while(count($recentCommands) > 5) {
+            array_pop($recentCommands);
+        }
 
         $this->store->set('recent_commands', $recentCommands);
 
