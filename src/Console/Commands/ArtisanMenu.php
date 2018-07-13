@@ -2,6 +2,7 @@
 
 namespace DivineOmega\ArtisanMenu\Console\Commands;
 
+use DivineOmega\JsonKeyValueStore\JsonKeyValueStore;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
@@ -30,6 +31,8 @@ class ArtisanMenu extends Command
     private $app;
     private $commands;
     private $namespaces;
+
+    private $store;
 
     /**
      * Create a new command instance.
@@ -65,6 +68,8 @@ class ArtisanMenu extends Command
         $this->app = $response->application;
         $this->commands = new Collection($response->commands);
         $this->namespaces = new Collection($response->namespaces);
+
+        $this->store = new JsonKeyValueStore(storage_path('artisan-menu.json.gz'));
 
         $this->mainMenu();
 
@@ -136,6 +141,25 @@ class ArtisanMenu extends Command
 
     private function commandSelected(CliMenu $menu, object $command)
     {
+        $recentCommands = $this->store->get('recent_commands');
+
+        if (!is_array($recentCommands)) {
+            $recentCommands = [];
+        }
+
+        $key = array_search($command->name, $recentCommands);
+
+        if ($key !== false) {
+            unset($recentCommands[$key]);
+        }
+
+        array_unshift($recentCommands, $command->name);
+
+        var_dump($recentCommands);
+
+        $this->store->set('recent_commands', $recentCommands);
+
+
         $menuStyle = new MenuStyle();
         $menuStyle->setBg('white');
         $menuStyle->setFg('black');
