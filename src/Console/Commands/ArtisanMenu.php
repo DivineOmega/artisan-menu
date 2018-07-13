@@ -79,7 +79,7 @@ class ArtisanMenu extends Command
     {
 
         $menu = new CliMenuBuilder();
-        $menu->setTitle('Artisan Menu - '.$this->app->name.' '.$this->app->version);
+        $menu->setTitle('Artisan Menu - '.$this->getAppString());
         $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
@@ -97,8 +97,10 @@ class ArtisanMenu extends Command
         $menu->addLineBreak();
 
         foreach($this->namespaces as $namespace) {
-            $title = $namespace->id == '_global' ? 'Global' : ucfirst($namespace->id);
-            $menu->addSubMenuFromBuilder($title, $this->getNamespaceMenuBuilder($namespace));
+            $menu->addSubMenuFromBuilder(
+                $this->getNamespaceTitle($namespace),
+                $this->getNamespaceMenuBuilder($namespace)
+            );
         }
 
         $menu->addLineBreak();
@@ -108,10 +110,20 @@ class ArtisanMenu extends Command
         $menu->open();
     }
 
+    private function getNamespaceTitle(object $namespace)
+    {
+        return $namespace->id == '_global' ? 'Global' : ucfirst($namespace->id);
+    }
+
+    private function getAppString()
+    {
+        return $this->app->name.' '.$this->app->version;
+    }
+
     private function getNamespaceMenuBuilder(object $namespace)
     {
         $menu = CliMenuBuilder::newSubMenu(TerminalFactory::fromSystem());
-        $menu->setTitle('Artisan Menu - '.ucfirst($namespace->id).' - '.$this->app->name.' '.$this->app->version);
+        $menu->setTitle('Artisan Menu - '.$this->getNamespaceTitle($namespace).' - '.$this->getAppString());
         $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
