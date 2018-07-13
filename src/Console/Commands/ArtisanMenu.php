@@ -79,7 +79,7 @@ class ArtisanMenu extends Command
     {
 
         $menu = new CliMenuBuilder();
-        $menu->setTitle('Artisan Menu - '.$this->getAppString());
+        $menu->setTitle($this->getMenuTitle());
         $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
@@ -133,7 +133,7 @@ class ArtisanMenu extends Command
     private function getNamespaceMenuBuilder(object $namespace)
     {
         $menu = CliMenuBuilder::newSubMenu(TerminalFactory::fromSystem());
-        $menu->setTitle('Artisan Menu - '.$this->getNamespaceTitle($namespace).' - '.$this->getAppString());
+        $menu->setTitle($this->getMenuTitle($namespace));
         $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
