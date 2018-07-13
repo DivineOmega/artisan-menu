@@ -110,6 +110,16 @@ class ArtisanMenu extends Command
         $menu->open();
     }
 
+    private function getMenuTitle(object $namespace = null)
+    {
+        $title = 'Artisan Menu - ';
+        if ($namespace) {
+            $title .= $this->getNamespaceTitle($namespace).' - ';
+        }
+        $title .= $this->getAppString();
+        return $title;
+    }
+
     private function getNamespaceTitle(object $namespace)
     {
         return $namespace->id == '_global' ? 'Global' : ucfirst($namespace->id);
