@@ -80,7 +80,6 @@ class ArtisanMenu extends Command
 
         $menu = new CliMenuBuilder();
         $menu->setTitle($this->getMenuTitle());
-        $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
 
@@ -134,7 +133,6 @@ class ArtisanMenu extends Command
     {
         $menu = CliMenuBuilder::newSubMenu(TerminalFactory::fromSystem());
         $menu->setTitle($this->getMenuTitle($namespace));
-        $menu->setMarginAuto();
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
 
