@@ -1,6 +1,6 @@
 {
     "name": "divineomega/artisan-menu",
-    "description": "Use Artisan via a beautiful console GUI",
+    "description": "Use Artisan via an elegant console GUI",
     "require": {
         "php-school/cli-menu": "^3.0",
         "divineomega/json-key-value-store": "^1.0"
