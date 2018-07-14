@@ -110,7 +110,7 @@ class ArtisanMenu extends Command
         $menu->open();
     }
 
-    private function getMenuTitle($namespace = null)
+    private function getMenuTitle(\stdClass $namespace = null)
     {
         $title = 'Artisan Menu - ';
         if ($namespace) {
@@ -120,7 +120,7 @@ class ArtisanMenu extends Command
         return $title;
     }
 
-    private function getNamespaceTitle($namespace)
+    private function getNamespaceTitle(\stdClass $namespace)
     {
         return $namespace->id == '_global' ? 'Global' : ucfirst($namespace->id);
     }
@@ -130,7 +130,7 @@ class ArtisanMenu extends Command
         return $this->app->name.' '.$this->app->version;
     }
 
-    private function getNamespaceMenuBuilder($namespace)
+    private function getNamespaceMenuBuilder(\stdClass $namespace)
     {
         $menu = CliMenuBuilder::newSubMenu(TerminalFactory::fromSystem());
         $menu->setTitle($this->getMenuTitle($namespace));
@@ -159,7 +159,7 @@ class ArtisanMenu extends Command
         return $this->commands->where('name', $commandName)->first();
     }
 
-    private function addCommandMenuItem(CliMenuBuilder $menu, $command)
+    private function addCommandMenuItem(CliMenuBuilder $menu, \stdClass $command)
     {
         if (in_array($command->name, ['list', 'help', 'inspire', 'optimize', 'menu'])) {
             return;
@@ -170,7 +170,7 @@ class ArtisanMenu extends Command
         });
     }
 
-    private function commandSelected(CliMenu $menu, $command)
+    private function commandSelected(CliMenu $menu, \stdClass $command)
     {
         $recentCommands = $this->store->get('recent_commands');
 
