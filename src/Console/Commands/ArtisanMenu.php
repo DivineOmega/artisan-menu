@@ -6,7 +6,6 @@ use DivineOmega\JsonKeyValueStore\JsonKeyValueStore;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Artisan;
-use PhpSchool\CliMenu\Action\GoBackAction;
 use PhpSchool\CliMenu\Builder\CliMenuBuilder;
 use PhpSchool\CliMenu\CliMenu;
 use PhpSchool\CliMenu\MenuStyle;
@@ -69,7 +68,20 @@ class ArtisanMenu extends Command
         $this->commands = new Collection($response->commands);
         $this->namespaces = new Collection($response->namespaces);
 
-        $this->store = new JsonKeyValueStore(storage_path('artisan-menu.json.gz'));
+        $storeFile = 'artisan-menu.json.gz';
+        $storePath = storage_path($storeFile);
+        $this->store = new JsonKeyValueStore($storePath);
+
+        $gitIgnorePath = storage_path('.gitignore');
+        if (file_exists($gitIgnorePath)) {
+            $gitIgnore = file_get_contents($gitIgnorePath);
+            if (!str_contains($gitIgnore, $storeFile)) {
+                $gitIgnore .= PHP_EOL;
+                $gitIgnore .= $storeFile;
+                $gitIgnore .= PHP_EOL;
+                file_put_contents($gitIgnorePath, $gitIgnore);
+            }
+        }
 
         $this->mainMenu();
 
