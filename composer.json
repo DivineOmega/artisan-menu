@@ -4,7 +4,9 @@
     "require": {
         "php": ">=7.0",
         "php-school/cli-menu": "^3.0",
-        "divineomega/json-key-value-store": "^1.0"
+        "divineomega/json-key-value-store": "^1.0",
+        "ext-json": "*",
+        "laravel/framework": "^5.1"
     },
     "autoload": {
         "psr-4": {
