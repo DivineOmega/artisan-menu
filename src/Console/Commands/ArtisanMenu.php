@@ -80,9 +80,8 @@ class ArtisanMenu extends Command
         }
 
         if (!str_contains($gitIgnore, $storeFile)) {
-            $gitIgnore .= PHP_EOL;
-            $gitIgnore .= $storeFile;
-            $gitIgnore .= PHP_EOL;
+            $gitIgnore .= PHP_EOL.$storeFile;
+            $gitIgnore = trim($gitIgnore);
             file_put_contents($gitIgnorePath, $gitIgnore);
         }
 
