@@ -8,7 +8,7 @@ Use Artisan via an elegant console GUI
 
 ## Features
 
-* Run built-in and custom Artisan command from a console GUI
+* Run built-in and custom Artisan commands from a console GUI
 * Prompts to enter required command arguments
 * Displays most recently used commands
 
