@@ -150,7 +150,7 @@ class ArtisanMenu extends Command
         $menu->setBackgroundColour('black');
         $menu->setForegroundColour('white');
 
-        $namespaceRootCommand = $this->commands->firstWhere('name', $namespace->id);
+        $namespaceRootCommand = $this->commands->where('name', $namespace->id)->first();
 
         if ($namespaceRootCommand) {
             $this->addCommandMenuItem($menu,$namespaceRootCommand);
